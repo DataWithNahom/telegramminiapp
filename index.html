@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Learning Platform</title>
-    <!-- Video.js CSS -->
-    <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet" />
+    <title>To-Do List App</title>
     <style>
         /* General Styles */
         body {
@@ -16,7 +14,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             color: #333;
         }
 
@@ -26,8 +24,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 800px;
-            text-align: center;
+            max-width: 400px;
             animation: fadeIn 0.5s ease-in-out;
         }
 
@@ -43,99 +40,176 @@
         }
 
         h1 {
+            text-align: center;
             color: #444;
             margin-bottom: 1.5rem;
             font-size: 2rem;
         }
 
-        /* Video Container Styles */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Input and Button Styles */
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
         }
 
-        .video-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-        }
-
-        /* Description Section */
-        .description {
-            margin-top: 1.5rem;
-            text-align: left;
-            color: #555;
-        }
-
-        .description h2 {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .description p {
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             font-size: 1rem;
-            line-height: 1.5;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #6a11cb;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2575fc;
+        }
+
+        /* Task List Styles */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            color: #888;
+            background: #e0e0e0;
+        }
+
+        .task-text {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff1a1a;
+        }
+
+        /* Clear All Button */
+        .clear-all-btn {
+            width: 100%;
+            margin-top: 1rem;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .clear-all-btn:hover {
+            background: #ff1a1a;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the E-Learning Platform</h1>
-
-        <!-- Video Embed -->
-        <div class="video-container">
-            <video
-                id="my-video"
-                class="video-js vjs-default-skin"
-                controls
-                preload="auto"
-                width="100%"
-                height="100%"
-                data-setup='{}'
-            >
-                <source src="https://www.youtube.com/watch?v=fOnT9vm5ni8" type="video/youtube" />
-                <p class="vjs-no-js">
-                    To view this video, please enable JavaScript or use a browser that supports HTML5 video.
-                </p>
-            </video>
+        <h1>To-Do List</h1>
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Enter a new task">
+            <button onclick="addTask()">Add Task</button>
         </div>
-
-        <!-- Video Description -->
-        <div class="description">
-            <h2>Video Title</h2>
-            <p>
-                This is a sample video for your e-learning platform. You can replace this description with
-                details about the video content, learning objectives, or any additional resources.
-            </p>
-        </div>
+        <ul id="taskList"></ul>
+        <button class="clear-all-btn" onclick="clearAllTasks()">Clear All</button>
     </div>
 
-    <!-- Video.js and YouTube Plugin -->
-    <script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
     <script>
-        // Initialize the video player
-        const player = videojs('my-video', {
-            techOrder: ['youtube'], // Use YouTube as the playback technology
-            sources: [{
-                type: 'video/youtube',
-                src: 'https://www.youtube.com/watch?v=fOnT9vm5ni8'
-            }],
-            youtube: {
-                ytControls: 0, // Disable YouTube controls
-                modestBranding: 1, // Hide YouTube logo
-                rel: 0, // Disable related videos
-                showinfo: 0 // Hide video title and uploader info
+        // Function to add a new task
+        function addTask() {
+            const taskInput = document.getElementById("taskInput");
+            const taskText = taskInput.value.trim();
+
+            if (taskText === "") {
+                alert("Please enter a task!");
+                return;
             }
-        });
+
+            const taskList = document.getElementById("taskList");
+
+            // Create a new list item
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span class="task-text">${taskText}</span>
+                <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+            `;
+
+            // Add a click event to mark the task as completed
+            li.addEventListener("click", function () {
+                li.classList.toggle("completed");
+            });
+
+            // Append the list item to the task list
+            taskList.appendChild(li);
+
+            // Clear the input field
+            taskInput.value = "";
+        }
+
+        // Function to delete a task
+        function deleteTask(button) {
+            const li = button.parentElement;
+            li.remove();
+        }
+
+        // Function to clear all tasks
+        function clearAllTasks() {
+            const taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+        }
     </script>
 </body>
 </html>
