@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pdfjs-dist": "^4.10.38",
     "video.js": "^8.21.0",
     "videojs-youtube": "^3.0.1"
   }
