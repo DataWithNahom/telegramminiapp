@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Learning Platform</title>
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet" />
     <style>
         /* General Styles */
         body {
@@ -56,13 +58,12 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .video-container iframe {
+        .video-js {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
             border-radius: 10px;
         }
 
@@ -91,12 +92,20 @@
 
         <!-- Video Embed -->
         <div class="video-container">
-            <iframe
-                id="ytplayer"
-                src="https://www.youtube.com/embed/GwCAOkXsKhI?enablejsapi=1&controls=1&modestbranding=1&rel=0&showinfo=0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-            ></iframe>
+            <video
+                id="my-video"
+                class="video-js vjs-default-skin"
+                controls
+                preload="auto"
+                width="100%"
+                height="100%"
+                data-setup='{}'
+            >
+                <source src="https://www.youtube.com/watch?v=GwCAOkXsKhI" type="video/youtube" />
+                <p class="vjs-no-js">
+                    To view this video, please enable JavaScript or use a browser that supports HTML5 video.
+                </p>
+            </video>
         </div>
 
         <!-- Video Description -->
@@ -109,34 +118,24 @@
         </div>
     </div>
 
+    <!-- Video.js and YouTube Plugin -->
+    <script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
     <script>
-        // Load the YouTube IFrame API
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // Create a YouTube player
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('ytplayer', {
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        // When the player is ready
-        function onPlayerReady(event) {
-            // You can customize player behavior here
-            event.target.playVideo();
-        }
-
-        // When the player state changes
-        function onPlayerStateChange(event) {
-            // You can handle state changes here (e.g., video ended, paused, etc.)
-        }
+        // Initialize the video player
+        const player = videojs('my-video', {
+            techOrder: ['youtube'], // Use YouTube as the playback technology
+            sources: [{
+                type: 'video/youtube',
+                src: 'https://youtu.be/fOnT9vm5ni8'
+            }],
+            youtube: {
+                ytControls: 0, // Disable YouTube controls
+                modestBranding: 1, // Hide YouTube logo
+                rel: 0, // Disable related videos
+                showinfo: 0 // Hide video title and uploader info
+            }
+        });
     </script>
 </body>
 </html>
