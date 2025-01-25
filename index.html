@@ -92,7 +92,8 @@
         <!-- Video Embed -->
         <div class="video-container">
             <iframe
-                src="https://www.youtube.com/embed/GwCAOkXsKhI"
+                id="ytplayer"
+                src="https://www.youtube.com/embed/GwCAOkXsKhI?enablejsapi=1&controls=1&modestbranding=1&rel=0&showinfo=0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
             ></iframe>
@@ -107,5 +108,35 @@
             </p>
         </div>
     </div>
+
+    <script>
+        // Load the YouTube IFrame API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Create a YouTube player
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytplayer', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        // When the player is ready
+        function onPlayerReady(event) {
+            // You can customize player behavior here
+            event.target.playVideo();
+        }
+
+        // When the player state changes
+        function onPlayerStateChange(event) {
+            // You can handle state changes here (e.g., video ended, paused, etc.)
+        }
+    </script>
 </body>
 </html>
